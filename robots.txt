@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://leglock.ca/sitemap.xml
