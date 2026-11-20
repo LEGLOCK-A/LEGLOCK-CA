@@ -221,6 +221,7 @@ class Fetcher:
     def __init__(self, workers=6):
         self.workers = workers
         self.count_429 = 0
+        self.count_403 = 0
         self.lock = threading.Lock()
         self.aborted = False
 
@@ -244,6 +245,21 @@ class Fetcher:
                     if n > 8:
                         self.aborted = True
                         raise FetchError("aborted: repeated HTTP 429 from ESPN")
+                    time.sleep(2.0)
+                    continue
+                if e.code == 403:
+                    # ESPN 403s from datacenter IPs are usually burst
+                    # throttling, not a hard block: in the 2026-11-20
+                    # failures, most requests in the same run succeeded.
+                    # Pause and retry like a 429 instead of failing the
+                    # request (and possibly the whole league) instantly;
+                    # a run-wide cap still aborts early on a hard block.
+                    with self.lock:
+                        self.count_403 += 1
+                        n403 = self.count_403
+                    if n403 > 60:
+                        self.aborted = True
+                        raise FetchError("aborted: repeated HTTP 403 from ESPN")
                     time.sleep(2.0)
                     continue
                 if e.code >= 500:
