@@ -8,81 +8,6 @@
  ],
  "pending": [
   {
-   "league": "NBA",
-   "snapshotDate": "2026-11-19",
-   "pid": "6589",
-   "name": "Draymond Green",
-   "team": "GS",
-   "key": "steals",
-   "stat": "Steals",
-   "dir": "Under",
-   "line": 1.5,
-   "l5": [
-    5,
-    5
-   ],
-   "l10": [
-    8,
-    10
-   ],
-   "l20": [
-    11,
-    13
-   ],
-   "gameDate": "2026-11-19",
-   "opp": "MEM"
-  },
-  {
-   "league": "NBA",
-   "snapshotDate": "2026-11-19",
-   "pid": "6589",
-   "name": "Draymond Green",
-   "team": "GS",
-   "key": "threePointersMade",
-   "stat": "3PM",
-   "dir": "Under",
-   "line": 0.5,
-   "l5": [
-    3,
-    5
-   ],
-   "l10": [
-    8,
-    10
-   ],
-   "l20": [
-    9,
-    13
-   ],
-   "gameDate": "2026-11-19",
-   "opp": "MEM"
-  },
-  {
-   "league": "NBA",
-   "snapshotDate": "2026-11-19",
-   "pid": "6589",
-   "name": "Draymond Green",
-   "team": "GS",
-   "key": "blocks",
-   "stat": "Blocks",
-   "dir": "Under",
-   "line": 1.5,
-   "l5": [
-    4,
-    5
-   ],
-   "l10": [
-    7,
-    10
-   ],
-   "l20": [
-    10,
-    13
-   ],
-   "gameDate": "2026-11-19",
-   "opp": "MEM"
-  },
-  {
    "league": "NFL",
    "snapshotDate": "2026-11-19",
    "pid": "4379399",
@@ -5199,6 +5124,87 @@
     ],
     "gameDate": "2026-11-19",
     "opp": "POR",
+    "value": null,
+    "result": "DNP"
+   },
+   {
+    "league": "NBA",
+    "snapshotDate": "2026-11-19",
+    "pid": "6589",
+    "name": "Draymond Green",
+    "team": "GS",
+    "key": "steals",
+    "stat": "Steals",
+    "dir": "Under",
+    "line": 1.5,
+    "l5": [
+     5,
+     5
+    ],
+    "l10": [
+     8,
+     10
+    ],
+    "l20": [
+     11,
+     13
+    ],
+    "gameDate": "2026-11-19",
+    "opp": "MEM",
+    "value": null,
+    "result": "DNP"
+   },
+   {
+    "league": "NBA",
+    "snapshotDate": "2026-11-19",
+    "pid": "6589",
+    "name": "Draymond Green",
+    "team": "GS",
+    "key": "threePointersMade",
+    "stat": "3PM",
+    "dir": "Under",
+    "line": 0.5,
+    "l5": [
+     3,
+     5
+    ],
+    "l10": [
+     8,
+     10
+    ],
+    "l20": [
+     9,
+     13
+    ],
+    "gameDate": "2026-11-19",
+    "opp": "MEM",
+    "value": null,
+    "result": "DNP"
+   },
+   {
+    "league": "NBA",
+    "snapshotDate": "2026-11-19",
+    "pid": "6589",
+    "name": "Draymond Green",
+    "team": "GS",
+    "key": "blocks",
+    "stat": "Blocks",
+    "dir": "Under",
+    "line": 1.5,
+    "l5": [
+     4,
+     5
+    ],
+    "l10": [
+     7,
+     10
+    ],
+    "l20": [
+     10,
+     13
+    ],
+    "gameDate": "2026-11-19",
+    "opp": "MEM",
     "value": null,
     "result": "DNP"
    }
