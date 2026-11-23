@@ -1022,7 +1022,7 @@ PAGE_FOOTER = ('<footer><div class="site-footer"><span class="site-footer-brand"
                '<a href="/guides/">Guides</a><a href="/guides/responsible-play/">Responsible Play</a>'
                '<a href="/contact/">Contact</a><a href="/our-picks/">Our Picks</a><a href="/donation/">Donate</a></nav></div>'
                '<p class="site-footer-note">Questions: '
-               '<a href="mailto:support@leglock.online">support@leglock.online</a></p>'
+               '<a href="mailto:support@leglock.ca">support@leglock.ca</a></p>'
                '<p class="site-footer-note">LegLock — sports statistics &amp; information only '
                '— not gambling advice. No bets are taken here.</p></footer>')
 
