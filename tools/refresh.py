@@ -1359,7 +1359,7 @@ def build_league_page(lg, league, stamp, today_et, logo_uri, slugs=None,
 <title>{cfg['title']}</title>
 <meta name="description" content="{cfg['description']}" />
 <link rel="canonical" href="{SITE_ORIGIN}/{slug}/" />
-<link rel="stylesheet" href="/assets/site.css?v=11" />
+<link rel="stylesheet" href="/assets/site.css?v=12" />
 {PAGE_STYLE}
 </head>
 <body><main>{logo_html}{PAGE_TABS}{ADSTERRA_BANNER_SLOT}<h1 class="display" style="font-size:28px;font-weight:700;margin:14px 0 2px">{cfg['h1']}</h1><p class="sub" style="margin:0 0 10px">{cfg['sub']}</p><section class="content-body">
@@ -2722,7 +2722,7 @@ def archive_page_shell(title, description, canonical_path, h1, sub, body_html, l
 <title>{title}</title>
 <meta name="description" content="{description}" />
 <link rel="canonical" href="{SITE_ORIGIN}{canonical_path}" />
-<link rel="stylesheet" href="/assets/site.css?v=11" />
+<link rel="stylesheet" href="/assets/site.css?v=12" />
 {PAGE_STYLE}
 </head>
 <body><main>{logo_html}{PAGE_TABS}{ADSTERRA_BANNER_SLOT}<h1 class="display" style="font-size:28px;font-weight:700;margin:14px 0 2px">{h1}</h1><p class="sub" style="margin:0 0 10px">{sub}</p><section class="content-body">
@@ -3291,7 +3291,9 @@ def build_teams(league_objs, now_utc):
                 ab: {"name": e.get("name") or ab,
                      "rows": [{k: r.get(k) for k in ("d", "opp", "home", "pf", "pa",
                                                       "margin", "fh", "p1", "threes",
-                                                      "shots")}
+                                                      "shots", "reb", "ast", "fgp", "tpp",
+                                                      "p2", "p3", "saves", "svp",
+                                                      "tyds", "pyds", "ryds", "tov")}
                               for r in e.get("rows") or []]}
                 for ab, e in logs.items()}
             info[lg] = {"teams": len(logs), "teamProps": len(props),
