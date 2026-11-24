@@ -12,31 +12,6 @@
   {
    "league": "NFL",
    "snapshotDate": "2026-11-19",
-   "pid": "4697815",
-   "name": "Rachaad White",
-   "team": "WSH",
-   "key": "receptions",
-   "stat": "Receptions",
-   "dir": "Under",
-   "line": 2.5,
-   "l5": [
-    4,
-    5
-   ],
-   "l10": [
-    6,
-    8
-   ],
-   "l20": [
-    6,
-    8
-   ],
-   "gameDate": "2026-11-23",
-   "opp": "CIN"
-  },
-  {
-   "league": "NFL",
-   "snapshotDate": "2026-11-19",
    "pid": "4362921",
    "name": "Tyquan Thornton",
    "team": "KC",
@@ -108,31 +83,6 @@
    ],
    "gameDate": "2026-11-19",
    "opp": "VGK"
-  },
-  {
-   "league": "NFL",
-   "snapshotDate": "2026-11-20",
-   "pid": "4697815",
-   "name": "Rachaad White",
-   "team": "WSH",
-   "key": "receptions",
-   "stat": "Receptions",
-   "dir": "Under",
-   "line": 2.5,
-   "l5": [
-    4,
-    5
-   ],
-   "l10": [
-    6,
-    8
-   ],
-   "l20": [
-    6,
-    8
-   ],
-   "gameDate": "2026-11-23",
-   "opp": "CIN"
   },
   {
    "league": "NFL",
@@ -308,162 +258,6 @@
    ],
    "gameDate": "2026-11-22",
    "opp": "PIT"
-  },
-  {
-   "league": "NHL",
-   "snapshotDate": "2026-11-23",
-   "pid": "4755729",
-   "name": "Ben Meyers",
-   "team": "SEA",
-   "key": "points",
-   "stat": "Points",
-   "dir": "Under",
-   "line": 0.5,
-   "l5": [
-    5,
-    5
-   ],
-   "l10": [
-    9,
-    10
-   ],
-   "l20": [
-    15,
-    18
-   ],
-   "gameDate": "2026-11-23",
-   "opp": "ANA",
-   "pModel": 0.661
-  },
-  {
-   "league": "NHL",
-   "snapshotDate": "2026-11-23",
-   "pid": "5149155",
-   "name": "Will Smith",
-   "team": "SJ",
-   "key": "goals",
-   "stat": "Goals",
-   "dir": "Under",
-   "line": 0.5,
-   "l5": [
-    4,
-    5
-   ],
-   "l10": [
-    8,
-    10
-   ],
-   "l20": [
-    15,
-    20
-   ],
-   "gameDate": "2026-11-23",
-   "opp": "MIN",
-   "pModel": 0.658
-  },
-  {
-   "league": "NHL",
-   "snapshotDate": "2026-11-23",
-   "pid": "5149155",
-   "name": "Will Smith",
-   "team": "SJ",
-   "key": "shotsTotal",
-   "stat": "Shots",
-   "dir": "Over",
-   "line": 1.5,
-   "l5": [
-    3,
-    5
-   ],
-   "l10": [
-    7,
-    10
-   ],
-   "l20": [
-    16,
-    20
-   ],
-   "gameDate": "2026-11-23",
-   "opp": "MIN",
-   "pModel": 0.726
-  },
-  {
-   "league": "NHL",
-   "snapshotDate": "2026-11-23",
-   "pid": "4565233",
-   "name": "Matt Boldy",
-   "team": "MIN",
-   "key": "assists",
-   "stat": "Assists",
-   "dir": "Over",
-   "line": 0.5,
-   "l5": [
-    3,
-    5
-   ],
-   "l10": [
-    7,
-    10
-   ],
-   "l20": [
-    12,
-    20
-   ],
-   "gameDate": "2026-11-23",
-   "opp": "SJ",
-   "pModel": 0.639
-  },
-  {
-   "league": "NHL",
-   "snapshotDate": "2026-11-23",
-   "pid": "3115032",
-   "name": "Brandon Montour",
-   "team": "SEA",
-   "key": "points",
-   "stat": "Points",
-   "dir": "Over",
-   "line": 0.5,
-   "l5": [
-    3,
-    5
-   ],
-   "l10": [
-    7,
-    10
-   ],
-   "l20": [
-    11,
-    19
-   ],
-   "gameDate": "2026-11-23",
-   "opp": "ANA",
-   "pModel": 0.619
-  },
-  {
-   "league": "NHL",
-   "snapshotDate": "2026-11-23",
-   "pid": "4874741",
-   "name": "Mackie Samoskevich",
-   "team": "SEA",
-   "key": "points",
-   "stat": "Points",
-   "dir": "Over",
-   "line": 0.5,
-   "l5": [
-    3,
-    5
-   ],
-   "l10": [
-    7,
-    10
-   ],
-   "l20": [
-    11,
-    19
-   ],
-   "gameDate": "2026-11-23",
-   "opp": "ANA",
-   "pModel": 0.647
   },
   {
    "league": "NBA",
@@ -9004,6 +8798,201 @@
     "gameDate": "2026-11-23",
     "opp": "TOR",
     "pModel": 0.624,
+    "value": 1,
+    "result": "MISS"
+   },
+   {
+    "league": "NFL",
+    "snapshotDate": "2026-11-20",
+    "pid": "4697815",
+    "name": "Rachaad White",
+    "team": "WSH",
+    "key": "receptions",
+    "stat": "Receptions",
+    "dir": "Under",
+    "line": 2.5,
+    "l5": [
+     4,
+     5
+    ],
+    "l10": [
+     6,
+     8
+    ],
+    "l20": [
+     6,
+     8
+    ],
+    "gameDate": "2026-11-23",
+    "opp": "CIN",
+    "value": 0,
+    "result": "HIT"
+   },
+   {
+    "league": "NHL",
+    "snapshotDate": "2026-11-23",
+    "pid": "4755729",
+    "name": "Ben Meyers",
+    "team": "SEA",
+    "key": "points",
+    "stat": "Points",
+    "dir": "Under",
+    "line": 0.5,
+    "l5": [
+     5,
+     5
+    ],
+    "l10": [
+     9,
+     10
+    ],
+    "l20": [
+     15,
+     18
+    ],
+    "gameDate": "2026-11-23",
+    "opp": "ANA",
+    "pModel": 0.661,
+    "value": 1,
+    "result": "MISS"
+   },
+   {
+    "league": "NHL",
+    "snapshotDate": "2026-11-23",
+    "pid": "3115032",
+    "name": "Brandon Montour",
+    "team": "SEA",
+    "key": "points",
+    "stat": "Points",
+    "dir": "Over",
+    "line": 0.5,
+    "l5": [
+     3,
+     5
+    ],
+    "l10": [
+     7,
+     10
+    ],
+    "l20": [
+     11,
+     19
+    ],
+    "gameDate": "2026-11-23",
+    "opp": "ANA",
+    "pModel": 0.619,
+    "value": 1,
+    "result": "HIT"
+   },
+   {
+    "league": "NHL",
+    "snapshotDate": "2026-11-23",
+    "pid": "4874741",
+    "name": "Mackie Samoskevich",
+    "team": "SEA",
+    "key": "points",
+    "stat": "Points",
+    "dir": "Over",
+    "line": 0.5,
+    "l5": [
+     3,
+     5
+    ],
+    "l10": [
+     7,
+     10
+    ],
+    "l20": [
+     11,
+     19
+    ],
+    "gameDate": "2026-11-23",
+    "opp": "ANA",
+    "pModel": 0.647,
+    "value": 1,
+    "result": "HIT"
+   },
+   {
+    "league": "NHL",
+    "snapshotDate": "2026-11-23",
+    "pid": "4565233",
+    "name": "Matt Boldy",
+    "team": "MIN",
+    "key": "assists",
+    "stat": "Assists",
+    "dir": "Over",
+    "line": 0.5,
+    "l5": [
+     3,
+     5
+    ],
+    "l10": [
+     7,
+     10
+    ],
+    "l20": [
+     12,
+     20
+    ],
+    "gameDate": "2026-11-23",
+    "opp": "SJ",
+    "pModel": 0.639,
+    "value": 3,
+    "result": "HIT"
+   },
+   {
+    "league": "NHL",
+    "snapshotDate": "2026-11-23",
+    "pid": "5149155",
+    "name": "Will Smith",
+    "team": "SJ",
+    "key": "goals",
+    "stat": "Goals",
+    "dir": "Under",
+    "line": 0.5,
+    "l5": [
+     4,
+     5
+    ],
+    "l10": [
+     8,
+     10
+    ],
+    "l20": [
+     15,
+     20
+    ],
+    "gameDate": "2026-11-23",
+    "opp": "MIN",
+    "pModel": 0.658,
+    "value": 0,
+    "result": "HIT"
+   },
+   {
+    "league": "NHL",
+    "snapshotDate": "2026-11-23",
+    "pid": "5149155",
+    "name": "Will Smith",
+    "team": "SJ",
+    "key": "shotsTotal",
+    "stat": "Shots",
+    "dir": "Over",
+    "line": 1.5,
+    "l5": [
+     3,
+     5
+    ],
+    "l10": [
+     7,
+     10
+    ],
+    "l20": [
+     16,
+     20
+    ],
+    "gameDate": "2026-11-23",
+    "opp": "MIN",
+    "pModel": 0.726,
     "value": 1,
     "result": "MISS"
    }
