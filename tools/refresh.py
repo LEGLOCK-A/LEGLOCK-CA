@@ -1688,6 +1688,7 @@ SITEMAP_FALLBACK_URLS = [
     "https://leglock.ca/shuffle/",
     "https://leglock.ca/game-logs/",
     "https://leglock.ca/injuries/",
+    "https://leglock.ca/cheatsheet/",
     "https://leglock.ca/donation/",
     "https://leglock.ca/our-picks/",
     "https://leglock.ca/about/",
