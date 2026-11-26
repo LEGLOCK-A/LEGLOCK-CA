@@ -5476,7 +5476,7 @@ runCheck(false);
     receivingTouchdowns: "RETD", receptions: "REC", goals: "G", shotsTotal: "SOG",
     saves: "SV", combo: "PRA", total: "TOT", oppTotal: "OPP", winBy: "WIN",
     firstHalf: "1H", firstPeriod: "P1", teamThrees: "3PM", teamShots: "SOG" };
-  var TSTEP = { total: 3, oppTotal: 3, winBy: 2.5, firstHalf: 2.5, firstPeriod: 0.5, teamThrees: 1.5, teamShots: 2.5 };
+  var TSTEP = { total: 3, oppTotal: 3, winBy: 2, firstHalf: 2, firstPeriod: 1, teamThrees: 2, teamShots: 2 };
   var BASIS_LABEL = { recent: "Recent form", vs: "Versus opponent", venue: "Home/Away split" };
 
   function DL(lg){ return window["__DL_" + lg] || {}; }
@@ -5521,9 +5521,11 @@ runCheck(false);
   }
   function stepFor(key){
     if (/Yards$/.test(key)) return 5;
-    if (key === "saves") return 1.5;
-    return 0.5;
+    if (key === "saves") return 2;
+    return 1;
   }
+  function halfLine(line){ return (Math.round(line) === line) ? line + 0.5 : line; }
+  function csLine(raw){ var l = halfLine(raw); return (CS.dir === "Over" && l < 0.5) ? 0.5 : l; }
   function shiftLine(line, dir, step){
     var v = dir === "Over" ? line - step : line + step;
     return Math.round(v * 10) / 10;
@@ -5576,7 +5578,7 @@ runCheck(false);
       if (CS.games !== "ALL" && !CS.games.has(gameKey(nx))) return;
       var vals = basisPlayerVals((D.logs || {})[p.pid] || [], nx, p.team, p.key);
       if (!vals.length) return;
-      var line = CS.lines === "alt" ? shiftLine(p.line, CS.dir, stepFor(p.key)) : p.line;
+      var line = csLine(CS.lines === "alt" ? shiftLine(p.line, CS.dir, stepFor(p.key)) : p.line);
       var rec = rateOf(vals, line, CS.dir);
       var pl = (D.players || {})[p.pid] || {};
       out.push({ kind: "player", name: p.name, team: p.team, pid: p.pid, key: p.key, stat: p.stat,
@@ -5599,7 +5601,7 @@ runCheck(false);
       else pick = rows.slice(0, 10);
       var vals = pick.map(function(r){ return tVal(e.stat, r); }).filter(function(v){ return v != null; });
       if (!vals.length) return;
-      var line = CS.lines === "alt" ? shiftLine(e.line, CS.dir, TSTEP[e.stat] || 2.5) : e.line;
+      var line = csLine(CS.lines === "alt" ? shiftLine(e.line, CS.dir, TSTEP[e.stat] || 2.5) : e.line);
       var rec = rateOf(vals, line, CS.dir);
       out.push({ kind: "team", name: e.teamName, team: e.team, abbr: e.team, key: e.stat, stat: e.statLabel,
                  line: line, dir: CS.dir, rate: rec.rate, hits: rec.hits, n: rec.n,
