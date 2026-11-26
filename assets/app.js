@@ -5458,17 +5458,19 @@ runCheck(false);
 })();
 
 /* ================= Cheatsheet generator (wizard) =================
-   A step-by-step builder in the style Jay picked: league, player or
-   team props, which stats, which games, what to base it on, main or
-   alternate lines, over or under — then a ranked cheatsheet computed
-   from the same logs the board uses. Lives only on pages carrying
+   A step-by-step builder in the style Jay picked: league(s), player
+   or team props, which stats, which games, what to base it on, main
+   or alternate lines, over or under — then a ranked cheatsheet
+   computed from the same logs the board uses. Lines are always
+   proper half lines like a book posts: a whole line becomes 4.5
+   for Overs and 3.5 for Unders. Lives only on pages carrying
    #csWizard (the Cheatsheet view). */
 (function(){
   var wiz = document.getElementById("csWizard");
   if (!wiz) return;
   var resEl = document.getElementById("csResults");
 
-  var CS = { step: 1, league: "NBA", kind: "player", stats: "ALL", games: "ALL",
+  var CS = { step: 1, leagues: ["NBA"], kind: "player", stats: "ALL", games: "ALL",
              basis: "recent", lines: "main", dir: "Over", out: [] };
   var CODES = { points: "PTS", totalRebounds: "REB", assists: "AST", threePointersMade: "3PM",
     steals: "STL", blocks: "BLK", passingYards: "PYD", passingTouchdowns: "PTD",
@@ -5524,11 +5526,17 @@ runCheck(false);
     if (key === "saves") return 2;
     return 1;
   }
-  function halfLine(line){ return (Math.round(line) === line) ? line + 0.5 : line; }
-  function csLine(raw){ var l = halfLine(raw); return (CS.dir === "Over" && l < 0.5) ? 0.5 : l; }
   function shiftLine(line, dir, step){
     var v = dir === "Over" ? line - step : line + step;
     return Math.round(v * 10) / 10;
+  }
+  /* Proper half lines only: a whole line rounds to the .5 on the
+     bettor's side of the number — Over 4 becomes 4.5, Under 4
+     becomes 3.5. */
+  function csLine(raw){
+    var l = raw;
+    if (Math.round(l) === l) l = (CS.dir === "Over") ? l + 0.5 : l - 0.5;
+    return (CS.dir === "Over" && l < 0.5) ? 0.5 : l;
   }
   function rateOf(vals, line, dir){
     var hits = vals.filter(function(v){ return dir === "Over" ? v > line : v < line; }).length;
@@ -5547,15 +5555,17 @@ runCheck(false);
   /* ---------- option lists ---------- */
   function statOptions(){
     var seen = {}, out = [];
-    if (CS.kind === "player"){
-      (DL(CS.league).props || []).forEach(function(p){
-        if (!seen[p.key]){ seen[p.key] = 1; out.push({ k: p.key, label: p.stat }); }
-      });
-    } else {
-      (((window.TEAMS_DATA || {}).leagues || {})[CS.league] || []).forEach(function(e){
-        if (!seen[e.stat]){ seen[e.stat] = 1; out.push({ k: e.stat, label: e.statLabel }); }
-      });
-    }
+    CS.leagues.forEach(function(lg){
+      if (CS.kind === "player"){
+        (DL(lg).props || []).forEach(function(p){
+          if (!seen[p.key]){ seen[p.key] = 1; out.push({ k: p.key, label: p.stat }); }
+        });
+      } else {
+        (((window.TEAMS_DATA || {}).leagues || {})[lg] || []).forEach(function(e){
+          if (!seen[e.stat]){ seen[e.stat] = 1; out.push({ k: e.stat, label: e.statLabel }); }
+        });
+      }
+    });
     return out;
   }
 
@@ -5570,42 +5580,47 @@ runCheck(false);
     return pick.map(function(r){ return valOf(r, key); }).filter(function(v){ return v != null; });
   }
   function genPlayer(){
-    var lg = CS.league, D = DL(lg), inj = injuredNames(lg), out = [];
-    (D.props || []).forEach(function(p){
-      if (inj.has(p.name)) return;
-      if (CS.stats !== "ALL" && !CS.stats.has(p.key)) return;
-      var nx = nextGame(lg, p.team); if (!nx) return;
-      if (CS.games !== "ALL" && !CS.games.has(gameKey(nx))) return;
-      var vals = basisPlayerVals((D.logs || {})[p.pid] || [], nx, p.team, p.key);
-      if (!vals.length) return;
-      var line = csLine(CS.lines === "alt" ? shiftLine(p.line, CS.dir, stepFor(p.key)) : p.line);
-      var rec = rateOf(vals, line, CS.dir);
-      var pl = (D.players || {})[p.pid] || {};
-      out.push({ kind: "player", name: p.name, team: p.team, pid: p.pid, key: p.key, stat: p.stat,
-                 line: line, dir: CS.dir, rate: rec.rate, hits: rec.hits, n: rec.n,
-                 nx: nx, img: pl.img || "" });
+    var out = [];
+    CS.leagues.forEach(function(lg){
+      var D = DL(lg), inj = injuredNames(lg);
+      (D.props || []).forEach(function(p){
+        if (inj.has(p.name)) return;
+        if (CS.stats !== "ALL" && !CS.stats.has(p.key)) return;
+        var nx = nextGame(lg, p.team); if (!nx) return;
+        if (CS.games !== "ALL" && !CS.games.has(lg + "|" + gameKey(nx))) return;
+        var vals = basisPlayerVals((D.logs || {})[p.pid] || [], nx, p.team, p.key);
+        if (!vals.length) return;
+        var line = csLine(CS.lines === "alt" ? shiftLine(p.line, CS.dir, stepFor(p.key)) : p.line);
+        var rec = rateOf(vals, line, CS.dir);
+        var pl = (D.players || {})[p.pid] || {};
+        out.push({ kind: "player", lg: lg, name: p.name, team: p.team, pid: p.pid, key: p.key, stat: p.stat,
+                   line: line, dir: CS.dir, rate: rec.rate, hits: rec.hits, n: rec.n,
+                   nx: nx, img: pl.img || "" });
+      });
     });
     out.sort(function(a, b){ return b.rate - a.rate || b.n - a.n; });
     return out.slice(0, 40);
   }
   function genTeam(){
-    var lg = CS.league, TD = window.TEAMS_DATA || { leagues: {}, logs: {} }, out = [];
-    ((TD.leagues || {})[lg] || []).forEach(function(e){
-      if (CS.stats !== "ALL" && !CS.stats.has(e.stat)) return;
-      var gk = [e.team, e.opp].sort().join("@");
-      if (CS.games !== "ALL" && !CS.games.has(gk)) return;
-      var rows = (((TD.logs || {})[lg] || {})[e.team] || {}).rows || [];
-      var pick = rows;
-      if (CS.basis === "vs") pick = rows.filter(function(r){ return r.opp === e.opp; });
-      else if (CS.basis === "venue") pick = rows.filter(function(r){ return !!r.home === !!e.home; });
-      else pick = rows.slice(0, 10);
-      var vals = pick.map(function(r){ return tVal(e.stat, r); }).filter(function(v){ return v != null; });
-      if (!vals.length) return;
-      var line = csLine(CS.lines === "alt" ? shiftLine(e.line, CS.dir, TSTEP[e.stat] || 2.5) : e.line);
-      var rec = rateOf(vals, line, CS.dir);
-      out.push({ kind: "team", name: e.teamName, team: e.team, abbr: e.team, key: e.stat, stat: e.statLabel,
-                 line: line, dir: CS.dir, rate: rec.rate, hits: rec.hits, n: rec.n,
-                 nxLabel: (e.home ? "vs " : "@ ") + e.opp, date: e.gameDate });
+    var TD = window.TEAMS_DATA || { leagues: {}, logs: {} }, out = [];
+    CS.leagues.forEach(function(lg){
+      ((TD.leagues || {})[lg] || []).forEach(function(e){
+        if (CS.stats !== "ALL" && !CS.stats.has(e.stat)) return;
+        var gk = lg + "|" + [e.team, e.opp].sort().join("@");
+        if (CS.games !== "ALL" && !CS.games.has(gk)) return;
+        var rows = (((TD.logs || {})[lg] || {})[e.team] || {}).rows || [];
+        var pick = rows;
+        if (CS.basis === "vs") pick = rows.filter(function(r){ return r.opp === e.opp; });
+        else if (CS.basis === "venue") pick = rows.filter(function(r){ return !!r.home === !!e.home; });
+        else pick = rows.slice(0, 10);
+        var vals = pick.map(function(r){ return tVal(e.stat, r); }).filter(function(v){ return v != null; });
+        if (!vals.length) return;
+        var line = csLine(CS.lines === "alt" ? shiftLine(e.line, CS.dir, TSTEP[e.stat] || 2) : e.line);
+        var rec = rateOf(vals, line, CS.dir);
+        out.push({ kind: "team", lg: lg, name: e.teamName, team: e.team, abbr: e.team, key: e.stat, stat: e.statLabel,
+                   line: line, dir: CS.dir, rate: rec.rate, hits: rec.hits, n: rec.n,
+                   nxLabel: (e.home ? "vs " : "@ ") + e.opp, date: e.gameDate });
+      });
     });
     out.sort(function(a, b){ return b.rate - a.rate || b.n - a.n; });
     return out.slice(0, 40);
@@ -5618,7 +5633,7 @@ runCheck(false);
   /* ---------- wizard rendering ---------- */
   var TITLES = [
     null,
-    ["Which league?", "Choose the league for this cheatsheet."],
+    ["Which league?", "Choose one or more leagues for this cheatsheet."],
     ["What do you prefer?", "Choose player or team props."],
     ["Which props do you want?", "Choose the bet types you want to include."],
     ["Which games to include?", "Include every game or pick the ones you want."],
@@ -5636,8 +5651,9 @@ runCheck(false);
     var step = CS.step, t = TITLES[step], body = "";
     if (step === 1){
       body = '<div class="csrows">' + ["NBA", "NFL", "NHL"].map(function(lg){
-        return optRow("league", lg, lg, CS.league === lg);
-      }).join("") + '</div>';
+        return optRow("league", lg, lg, CS.leagues.indexOf(lg) !== -1);
+      }).join("") + '</div>'
+        + '<div class="csfoot"><button type="button" class="csnext" data-cs="next">Next</button></div>';
     } else if (step === 2){
       body = '<div class="csrows">'
         + optRow("kind", "player", "Player Props", CS.kind === "player")
@@ -5652,15 +5668,18 @@ runCheck(false);
           }).join("") + '</div>'
         + '<div class="csfoot"><button type="button" class="csnext" data-cs="next">Next</button></div>';
     } else if (step === 4){
-      var gs = gamesList(CS.league);
+      var tiles = "";
+      CS.leagues.forEach(function(lg){
+        gamesList(lg).forEach(function(g){
+          var k = lg + "|" + gameKey(g), on = CS.games !== "ALL" && CS.games.has(k), gl = gameLabel(g);
+          tiles += '<button type="button" class="cstile' + (on ? " on" : "") + '" data-cs="game" data-v="' + esc(k) + '">'
+            + '<span class="cslogos"><img src="' + logoUrl(lg, g.away.abbr) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'"><img src="' + logoUrl(lg, g.home.abbr) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'"></span>'
+            + '<span class="cslabel">' + esc(gl.title) + '</span><span class="cscode">' + esc(lg + " · " + gl.when) + '</span></button>';
+        });
+      });
       body = '<div class="csgrid">'
         + '<button type="button" class="cstile' + (CS.games === "ALL" ? " on" : "") + '" data-cs="game" data-v="ALL"><span class="cslabel">All games</span></button>'
-        + gs.map(function(g){
-            var k = gameKey(g), on = CS.games !== "ALL" && CS.games.has(k), gl = gameLabel(g);
-            return '<button type="button" class="cstile' + (on ? " on" : "") + '" data-cs="game" data-v="' + esc(k) + '">'
-              + '<span class="cslogos"><img src="' + logoUrl(CS.league, g.away.abbr) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'"><img src="' + logoUrl(CS.league, g.home.abbr) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'"></span>'
-              + '<span class="cslabel">' + esc(gl.title) + '</span><span class="cscode">' + esc(gl.when) + '</span></button>';
-          }).join("") + '</div>'
+        + tiles + '</div>'
         + '<div class="csfoot"><button type="button" class="csnext" data-cs="next">Next</button></div>';
     } else if (step === 5){
       body = '<div class="csrows">'
@@ -5689,7 +5708,7 @@ runCheck(false);
   function summaryText(){
     var statsTxt = CS.stats === "ALL" ? "All stats" : CS.stats.size + " stat" + (CS.stats.size === 1 ? "" : "s");
     var gamesTxt = CS.games === "ALL" ? "All games" : CS.games.size + " game" + (CS.games.size === 1 ? "" : "s");
-    return CS.league + " · " + (CS.kind === "player" ? "Player props" : "Team props") + " · " + statsTxt + " · " + gamesTxt
+    return CS.leagues.join(" + ") + " · " + (CS.kind === "player" ? "Player props" : "Team props") + " · " + statsTxt + " · " + gamesTxt
       + " · " + BASIS_LABEL[CS.basis] + " · " + (CS.lines === "alt" ? "Alternate lines" : "Main lines") + " · " + CS.dir;
   }
   function renderResults(){
@@ -5704,16 +5723,16 @@ runCheck(false);
         return (home ? "vs " : "@ ") + opp + (isNaN(d) ? "" : " · " + d.toLocaleDateString(undefined, { weekday: "short" }));
       })() : r.nxLabel + (r.date ? " · " + r.date : "");
       var attrs = r.kind === "player"
-        ? ' data-open-logs="' + esc(r.pid) + '" data-stat-key="' + esc(r.key) + '" data-lg="' + esc(CS.league) + '"'
-        : ' data-teampop="' + esc(r.abbr) + '"';
+        ? ' data-open-logs="' + esc(r.pid) + '" data-stat-key="' + esc(r.key) + '" data-lg="' + esc(r.lg) + '"'
+        : ' data-teampop="' + esc(r.abbr) + '" data-csteam="' + esc(r.lg) + '"';
       var avatar = r.kind === "player" && r.img
         ? '<img class="csav" src="' + esc(r.img) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">'
-        : '<img class="csav" src="' + logoUrl(CS.league, r.team) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">';
+        : '<img class="csav" src="' + logoUrl(r.lg, r.team) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">';
       return '<article class="csres" role="button" tabindex="0"' + attrs + '>'
         + '<span class="csrank">' + (i + 1) + '</span>' + avatar
         + '<span class="csmain"><span class="csname">' + esc(r.name) + '</span>'
         + '<span class="csmeta">' + esc(r.stat) + ' · <b class="csdir ' + (r.dir === "Over" ? "over" : "under") + '">' + r.dir + ' ' + fv(r.line) + '</b></span>'
-        + '<span class="csmeta">' + esc(nxTxt) + (r.n < 5 ? ' · thin history' : '') + '</span></span>'
+        + '<span class="csmeta">' + esc(r.lg) + ' · ' + esc(nxTxt) + (r.n < 5 ? ' · thin history' : '') + '</span></span>'
         + '<span class="csrate"><b>' + r.rate + '%</b><span>' + r.hits + '/' + r.n + '</span></span></article>';
     }).join("");
     resEl.innerHTML = '<div class="csreshead"><h2 class="cstitle">Your cheatsheet</h2>'
@@ -5737,16 +5756,16 @@ runCheck(false);
   function exportSheet(fmt){
     var head = "LegLock Cheatsheet — " + summaryText();
     if (fmt === "csv"){
-      var lines = ["Rank,Name,Team,Stat,Line,Direction,Basis,Basis Rate,Record"];
+      var lines = ["Rank,League,Name,Team,Stat,Line,Direction,Basis,Basis Rate,Record"];
       CS.out.forEach(function(r, i){
-        lines.push([i + 1, '"' + r.name.replace(/"/g, '""') + '"', r.team, '"' + r.stat + '"', fv(r.line), r.dir,
+        lines.push([i + 1, r.lg, '"' + r.name.replace(/"/g, '""') + '"', r.team, '"' + r.stat + '"', fv(r.line), r.dir,
                     BASIS_LABEL[CS.basis], r.rate + "%", r.hits + "/" + r.n].join(","));
       });
       download("leglock-cheatsheet.csv", lines.join("\n"), "text/csv");
     } else {
       var txt = [head, ""];
       CS.out.forEach(function(r, i){
-        txt.push((i + 1) + ". " + r.name + " (" + r.team + ") — " + r.stat + " " + r.dir + " " + fv(r.line)
+        txt.push((i + 1) + ". [" + r.lg + "] " + r.name + " (" + r.team + ") — " + r.stat + " " + r.dir + " " + fv(r.line)
           + " · " + r.rate + "% (" + r.hits + "/" + r.n + ", " + BASIS_LABEL[CS.basis].toLowerCase() + ")");
       });
       txt.push("", "Research lines from game logs — not sportsbook prices.");
@@ -5756,14 +5775,24 @@ runCheck(false);
 
   /* ---------- events ---------- */
   function onClick(e){
+    /* Team rows: sync the app league first so the team popup (which
+       reads the current league) opens the right team. This listener
+       sits on the container, so it runs before the document-level
+       popup handler. */
+    var tr = e.target && e.target.closest ? e.target.closest("[data-csteam]") : null;
+    if (tr) {
+      try { if (window.__LL && window.__LL.setLeague) window.__LL.setLeague(tr.getAttribute("data-csteam")); } catch (err) {}
+    }
     var b = e.target && e.target.closest ? e.target.closest("[data-cs]") : null;
     if (!b) return;
     var act = b.getAttribute("data-cs"), v = b.getAttribute("data-v");
     if (act === "back"){ CS.step = Math.max(1, CS.step - 1); render(); }
     else if (act === "league"){
-      if (CS.league !== v){ CS.league = v; CS.stats = "ALL"; CS.games = "ALL"; }
-      try { if (window.__LL && window.__LL.setLeague) window.__LL.setLeague(v); } catch (err) {}
-      CS.step = 2; render();
+      var ix = CS.leagues.indexOf(v);
+      if (ix !== -1 && CS.leagues.length > 1) CS.leagues.splice(ix, 1);
+      else if (ix === -1) CS.leagues.push(v);
+      CS.stats = "ALL"; CS.games = "ALL";
+      render();
     }
     else if (act === "kind"){ if (CS.kind !== v){ CS.kind = v; CS.stats = "ALL"; } CS.step = 3; render(); }
     else if (act === "stat"){
@@ -5784,7 +5813,12 @@ runCheck(false);
       }
       render();
     }
-    else if (act === "next"){ CS.step = Math.min(7, CS.step + 1); render(); }
+    else if (act === "next"){
+      if (CS.step === 1) {
+        try { if (window.__LL && window.__LL.setLeague) window.__LL.setLeague(CS.leagues[0]); } catch (err) {}
+      }
+      CS.step = Math.min(7, CS.step + 1); render();
+    }
     else if (act === "basis"){ CS.basis = v; CS.step = 6; render(); }
     else if (act === "lines"){ CS.lines = v; CS.step = 7; render(); }
     else if (act === "dir"){ CS.dir = v; render(); }
