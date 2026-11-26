@@ -912,32 +912,6 @@
    "pModel": 0.499
   },
   {
-   "league": "NBA",
-   "snapshotDate": "2026-11-25",
-   "pid": "4683021",
-   "name": "Deni Avdija",
-   "team": "POR",
-   "key": "steals",
-   "stat": "Steals",
-   "dir": "Under",
-   "line": 1.5,
-   "l5": [
-    4,
-    5
-   ],
-   "l10": [
-    8,
-    10
-   ],
-   "l20": [
-    12,
-    15
-   ],
-   "gameDate": "2026-11-25",
-   "opp": "SA",
-   "pModel": 0.73
-  },
-  {
    "league": "NFL",
    "snapshotDate": "2026-11-25",
    "pid": "4379399",
@@ -11794,6 +11768,34 @@
     "opp": "VAN",
     "pModel": 0.528,
     "value": 3,
+    "result": "MISS"
+   },
+   {
+    "league": "NBA",
+    "snapshotDate": "2026-11-25",
+    "pid": "4683021",
+    "name": "Deni Avdija",
+    "team": "POR",
+    "key": "steals",
+    "stat": "Steals",
+    "dir": "Under",
+    "line": 1.5,
+    "l5": [
+     4,
+     5
+    ],
+    "l10": [
+     8,
+     10
+    ],
+    "l20": [
+     12,
+     15
+    ],
+    "gameDate": "2026-11-25",
+    "opp": "SA",
+    "pModel": 0.73,
+    "value": 2,
     "result": "MISS"
    }
   ]
